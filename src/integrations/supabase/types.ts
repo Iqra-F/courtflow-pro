@@ -14,16 +14,412 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          meta: Json | null
+          timestamp: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          meta?: Json | null
+          timestamp?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          meta?: Json | null
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      case_participants: {
+        Row: {
+          case_id: string
+          created_at: string
+          id: string
+          role_in_case: Database["public"]["Enums"]["participant_role"]
+          user_id: string
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          id?: string
+          role_in_case: Database["public"]["Enums"]["participant_role"]
+          user_id: string
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          id?: string
+          role_in_case?: Database["public"]["Enums"]["participant_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_participants_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_participants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cases: {
+        Row: {
+          assigned_judge_id: string | null
+          case_number: string
+          closed_at: string | null
+          created_at: string
+          created_by_id: string
+          filed_at: string | null
+          id: string
+          priority: Database["public"]["Enums"]["case_priority"]
+          status: Database["public"]["Enums"]["case_status"]
+          title: string
+          type: Database["public"]["Enums"]["case_type"]
+          updated_at: string
+        }
+        Insert: {
+          assigned_judge_id?: string | null
+          case_number: string
+          closed_at?: string | null
+          created_at?: string
+          created_by_id: string
+          filed_at?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["case_priority"]
+          status?: Database["public"]["Enums"]["case_status"]
+          title: string
+          type: Database["public"]["Enums"]["case_type"]
+          updated_at?: string
+        }
+        Update: {
+          assigned_judge_id?: string | null
+          case_number?: string
+          closed_at?: string | null
+          created_at?: string
+          created_by_id?: string
+          filed_at?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["case_priority"]
+          status?: Database["public"]["Enums"]["case_status"]
+          title?: string
+          type?: Database["public"]["Enums"]["case_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cases_assigned_judge_id_fkey"
+            columns: ["assigned_judge_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          case_id: string
+          created_at: string
+          id: string
+          mime_type: string
+          original_name: string
+          size: number
+          storage_key: string
+          uploaded_at: string
+          uploaded_by_id: string
+          visibility: Database["public"]["Enums"]["document_visibility"]
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          id?: string
+          mime_type: string
+          original_name: string
+          size: number
+          storage_key: string
+          uploaded_at?: string
+          uploaded_by_id: string
+          visibility?: Database["public"]["Enums"]["document_visibility"]
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          id?: string
+          mime_type?: string
+          original_name?: string
+          size?: number
+          storage_key?: string
+          uploaded_at?: string
+          uploaded_by_id?: string
+          visibility?: Database["public"]["Enums"]["document_visibility"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_uploaded_by_id_fkey"
+            columns: ["uploaded_by_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      filings: {
+        Row: {
+          case_id: string
+          created_at: string
+          description: string | null
+          filing_type: string
+          id: string
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by_id: string | null
+          status: Database["public"]["Enums"]["filing_status"]
+          submitted_at: string
+          submitted_by_id: string
+          updated_at: string
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          description?: string | null
+          filing_type: string
+          id?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by_id?: string | null
+          status?: Database["public"]["Enums"]["filing_status"]
+          submitted_at?: string
+          submitted_by_id: string
+          updated_at?: string
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          description?: string | null
+          filing_type?: string
+          id?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by_id?: string | null
+          status?: Database["public"]["Enums"]["filing_status"]
+          submitted_at?: string
+          submitted_by_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "filings_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "filings_reviewed_by_id_fkey"
+            columns: ["reviewed_by_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "filings_submitted_by_id_fkey"
+            columns: ["submitted_by_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hearings: {
+        Row: {
+          case_id: string
+          courtroom: string | null
+          created_at: string
+          created_by_id: string
+          end_at: string
+          id: string
+          notes: string | null
+          start_at: string
+          status: Database["public"]["Enums"]["hearing_status"]
+          updated_at: string
+        }
+        Insert: {
+          case_id: string
+          courtroom?: string | null
+          created_at?: string
+          created_by_id: string
+          end_at: string
+          id?: string
+          notes?: string | null
+          start_at: string
+          status?: Database["public"]["Enums"]["hearing_status"]
+          updated_at?: string
+        }
+        Update: {
+          case_id?: string
+          courtroom?: string | null
+          created_at?: string
+          created_by_id?: string
+          end_at?: string
+          id?: string
+          notes?: string | null
+          start_at?: string
+          status?: Database["public"]["Enums"]["hearing_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hearings_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hearings_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_settings: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          active: boolean
+          auth_user_id: string | null
+          created_at: string
+          email: string
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          active?: boolean
+          auth_user_id?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          active?: boolean
+          auth_user_id?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          username?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_case_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
-      [_ in never]: never
+      case_priority: "LOW" | "NORMAL" | "HIGH" | "URGENT"
+      case_status:
+        | "DRAFT"
+        | "FILED"
+        | "UNDER_REVIEW"
+        | "ACTIVE"
+        | "CLOSED"
+        | "DISMISSED"
+      case_type:
+        | "CIVIL"
+        | "CRIMINAL"
+        | "FAMILY"
+        | "SMALL_CLAIMS"
+        | "PROBATE"
+        | "TRAFFIC"
+      document_visibility: "PARTIES_ONLY" | "COURT_ONLY" | "PUBLIC"
+      filing_status: "SUBMITTED" | "UNDER_REVIEW" | "ACCEPTED" | "REJECTED"
+      hearing_status: "SCHEDULED" | "RESCHEDULED" | "CANCELLED" | "HELD"
+      participant_role:
+        | "PLAINTIFF"
+        | "DEFENDANT"
+        | "ATTORNEY"
+        | "JUDGE"
+        | "CLERK"
+        | "OBSERVER"
+      user_role: "ADMIN" | "JUDGE" | "ATTORNEY" | "CLERK" | "PUBLIC"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +546,36 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      case_priority: ["LOW", "NORMAL", "HIGH", "URGENT"],
+      case_status: [
+        "DRAFT",
+        "FILED",
+        "UNDER_REVIEW",
+        "ACTIVE",
+        "CLOSED",
+        "DISMISSED",
+      ],
+      case_type: [
+        "CIVIL",
+        "CRIMINAL",
+        "FAMILY",
+        "SMALL_CLAIMS",
+        "PROBATE",
+        "TRAFFIC",
+      ],
+      document_visibility: ["PARTIES_ONLY", "COURT_ONLY", "PUBLIC"],
+      filing_status: ["SUBMITTED", "UNDER_REVIEW", "ACCEPTED", "REJECTED"],
+      hearing_status: ["SCHEDULED", "RESCHEDULED", "CANCELLED", "HELD"],
+      participant_role: [
+        "PLAINTIFF",
+        "DEFENDANT",
+        "ATTORNEY",
+        "JUDGE",
+        "CLERK",
+        "OBSERVER",
+      ],
+      user_role: ["ADMIN", "JUDGE", "ATTORNEY", "CLERK", "PUBLIC"],
+    },
   },
 } as const
