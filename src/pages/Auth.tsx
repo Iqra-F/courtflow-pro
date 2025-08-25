@@ -6,11 +6,30 @@ import { RegisterForm } from "@/components/auth/RegisterForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Scale } from "lucide-react";
-
+import { supabase } from "@/integrations/supabase/client";
 export default function Auth() {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const navigate = useNavigate();
+useEffect(() => {
+  let mounted = true;
+
+  supabase.auth.getSession().then(({ data }) => {
+    if (!mounted) return;
+    const role = (data.session?.user?.app_metadata as any)?.role;
+    if (role) navigate(role === "ADMIN" ? "/admin/users" : "/", { replace: true });
+  });
+
+  const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+    const role = (session?.user?.app_metadata as any)?.role;
+    if (role) navigate(role === "ADMIN" ? "/admin/users" : "/", { replace: true });
+  });
+
+  return () => {
+    mounted = false;
+    sub.subscription.unsubscribe();
+  };
+}, [navigate]);
 
   // IMPORTANT: hooks first, then conditional rendering.
   useEffect(() => {
