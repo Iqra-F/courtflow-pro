@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff, Scale } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoginFormData {
   email: string;
@@ -16,6 +17,8 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const { signIn } = useAuth();
+  const { toast } = useToast();
 
   const {
     register,
@@ -28,39 +31,25 @@ export function LoginForm() {
     setError("");
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { error } = await signIn(data.email, data.password);
       
-      // Mock authentication logic
-      if (data.email === "admin@court.local" && data.password === "ChangeMe123!") {
-        console.log("Login successful");
-        // Redirect or update auth state
+      if (error) {
+        setError(error.message || "Invalid email or password");
       } else {
-        setError("Invalid email or password");
+        toast({
+          title: "Login successful",
+          description: "Welcome back to CourtFlow Pro!",
+        });
       }
-    } catch (err) {
-      setError("An error occurred during login");
+    } catch (err: any) {
+      setError(err.message || "An error occurred during login");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center mb-4">
-            <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center">
-              <Scale className="h-6 w-6 text-primary-foreground" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl">CourtFlow Pro</CardTitle>
-          <CardDescription>
-            Sign in to access the court management system
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
@@ -120,18 +109,15 @@ export function LoginForm() {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? "Signing in..." : "Sign In"}
+      </Button>
 
-          <div className="mt-6 text-center text-sm text-muted-foreground">
-            <p>Demo credentials:</p>
-            <p>Email: admin@court.local</p>
-            <p>Password: ChangeMe123!</p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      <div className="mt-6 text-center text-sm text-muted-foreground">
+        <p>Demo credentials:</p>
+        <p>Email: admin@court.local</p>
+        <p>Password: ChangeMe123!</p>
+      </div>
+    </form>
   );
 }
