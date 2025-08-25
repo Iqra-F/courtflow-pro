@@ -1,5 +1,5 @@
 export const ADMIN_CREDENTIALS = {
-  email: "admin@court.local",
+  email: "admincourt@gmail.com",
   password: "ChangeMe123!", // Edit this in code as needed
 };
 
