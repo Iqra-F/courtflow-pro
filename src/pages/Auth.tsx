@@ -6,11 +6,12 @@ import { RegisterForm } from '@/components/auth/RegisterForm';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Scale } from 'lucide-react';
-
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 export default function Auth() {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState('login');
-
+const navigate = useNavigate();
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -19,9 +20,14 @@ export default function Auth() {
     );
   }
 
-  if (user) {
-    return <Navigate to="/" replace />;
-  }
+  // if (user) {
+  //   return <Navigate to="/" replace />;
+  // }
+   useEffect(() => {
+    if (!user) return;
+    const role = (user.app_metadata as any)?.role ?? "PUBLIC";
+    navigate(role === "ADMIN" ? "/admin/users" : "/", { replace: true });
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-court-navy/5 to-court-blue/5 p-4">
