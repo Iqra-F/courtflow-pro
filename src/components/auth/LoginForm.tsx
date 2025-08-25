@@ -40,7 +40,7 @@ export function LoginForm() {
           title: "Login successful",
           description: "Welcome back to CourtFlow Pro!",
         });
-      <Navigate to={/admin/users} replace />;
+      <Navigate to={"/admin/users"} replace />;
       }
     } catch (err: any) {
       setError(err.message || "An error occurred during login");
