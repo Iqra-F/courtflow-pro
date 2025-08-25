@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-
+import { useNavigate } from "react-router-dom";
 interface LoginFormData {
   email: string;
   password: string;
@@ -40,6 +40,7 @@ export function LoginForm() {
           title: "Login successful",
           description: "Welcome back to CourtFlow Pro!",
         });
+return <Navigate to={/admin/users} replace />;
       }
     } catch (err: any) {
       setError(err.message || "An error occurred during login");
