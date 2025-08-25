@@ -36,7 +36,7 @@ export function LoginForm() {
       
       if (error) {
         setError(error.message || "Invalid email or password");
-      // } else {
+      } else {
       //   const { data: { session } } = await supabase.auth.getSession();
       // const role = (session?.user?.app_metadata as any)?.role ?? "PUBLIC";
         toast({
