@@ -38,12 +38,10 @@ export function LoginForm() {
         setError(error.message || "Invalid email or password");
       } else {
         const { data: { session } } = await supabase.auth.getSession();
-      const role = (session?.user?.app_metadata as any)?.role ?? "PUBLIC";
-        toast({
-          title: "Login successful",
-          description: "Welcome back to CourtFlow Pro!",
-        });
-      navigate(role === "ADMIN" ? "/admin/users" : "/", { replace: true });
+    const role = (session?.user?.app_metadata as any)?.role ?? "PUBLIC";
+
+    toast({ title: "Login successful", description: "Welcome back to CourtFlow Pro!" });
+    navigate(role === "ADMIN" ? "/admin/users" : "/", { replace: true });
       }
     } catch (err: any) {
       setError(err.message || "An error occurred during login");
