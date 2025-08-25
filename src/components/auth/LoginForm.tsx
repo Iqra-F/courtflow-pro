@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 interface LoginFormData {
   email: string;
   password: string;
@@ -19,7 +20,7 @@ export function LoginForm() {
   const [error, setError] = useState("");
   const { signIn } = useAuth();
   const { toast } = useToast();
-
+ const navigate = useNavigate(); 
   const {
     register,
     handleSubmit,
@@ -36,11 +37,13 @@ export function LoginForm() {
       if (error) {
         setError(error.message || "Invalid email or password");
       } else {
+        const { data: { session } } = await supabase.auth.getSession();
+      const role = (session?.user?.app_metadata as any)?.role ?? "PUBLIC";
         toast({
           title: "Login successful",
           description: "Welcome back to CourtFlow Pro!",
         });
-      <Navigate to={"/admin/users"} replace />;
+      navigate(role === "ADMIN" ? "/admin/users" : "/", { replace: true });
       }
     } catch (err: any) {
       setError(err.message || "An error occurred during login");
